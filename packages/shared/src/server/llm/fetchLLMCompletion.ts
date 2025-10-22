@@ -342,11 +342,7 @@ export async function fetchLLMCompletion(
       callbacks: finalCallbacks,
       maxRetries,
       apiKey,
-      ...(baseURL && {
-        clientOptions: {
-          apiEndpoint: baseURL,
-        },
-      }),
+      baseUrl: baseURL ?? undefined,
     });
   } else {
     // eslint-disable-next-line no-unused-vars
