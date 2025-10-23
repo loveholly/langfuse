@@ -761,5 +761,38 @@ describe("LLM Connection Tests", () => {
       expect(completion.tool_calls[0].name).toBe("get_weather");
       expect(completion.tool_calls[0].args).toHaveProperty("location");
     }, 30_000);
+
+    test("custom baseURL should be used when provided", async () => {
+      checkEnvVar();
+
+      // Test that an invalid baseURL causes an error, proving the custom baseURL is actually used
+      const invalidBaseURL = "https://invalid-endpoint.example.com";
+
+      await expect(
+        fetchLLMCompletion({
+          streaming: false,
+          messages: [
+            {
+              role: "user",
+              content: "Test message",
+              type: ChatMessageType.PublicAPICreated,
+            },
+          ],
+          modelParams: {
+            provider: "google-ai-studio",
+            adapter: LLMAdapter.GoogleAIStudio,
+            model: MODEL,
+            temperature: 0,
+            max_tokens: 10,
+          },
+          llmConnection: {
+            secretKey: encrypt(
+              process.env.LANGFUSE_LLM_CONNECTION_GOOGLEAISTUDIO_KEY!,
+            ),
+            baseURL: invalidBaseURL,
+          },
+        }),
+      ).rejects.toThrow();
+    }, 30_000);
   });
 });

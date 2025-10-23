@@ -342,6 +342,7 @@ export async function fetchLLMCompletion(
       callbacks: finalCallbacks,
       maxRetries,
       apiKey,
+      baseUrl: baseURL ?? undefined,
     });
   } else {
     // eslint-disable-next-line no-unused-vars
